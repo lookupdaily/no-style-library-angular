@@ -1,0 +1,101 @@
+:host {
+  // Input style
+  --input-border: 1px solid aqua;
+  --input-border-radius: 0.25rem;
+  --input-background-color: ;
+
+  // Inner padding
+  --inner-padding-start: 0.5rem;
+  --inner-padding-end: 0.5rem;
+  --inner-padding-top: 0.5rem;
+  --inner-padding-bottom: 0.5rem;
+
+  // Input text style
+
+  // Label/Input display
+  --input-display: inline-block;
+  --form-group-display: block;
+  --align-items: baseline;
+  --justify-content: flex-start;
+  --input-margin-right: 0;
+  --input-margin-left: 0;
+  --input-margin-top: 0;
+  --input-margin-bottom: 0;
+  --label-margin-right: 0.625rem;
+  --label-margin-bottom: 0;
+  --label-margin-left: 0;
+  --label-margin-top: 0;
+
+  // Label style
+  --label-color: inherit;
+  --label-weight: bold;
+  --label-font-size: inherit;
+
+  //Input/error display
+  --container-display: block;
+  --container-align-items: baseline;
+  --container-justify-content: flex-start;
+
+  // Error style
+  --input-error-color: red;
+  --input-error-weight: normal;
+  --input-error-font-size: inherit;
+  --input-error-margin-top: 0.625rem;
+  --input-error-margin-left: 0;
+  --input-error-margin-bottom: 0;
+  --input-error-margin-right: 0;
+
+  //disabled style
+  --disabled-color: inherit;
+  --disabled-opacity: 70%;
+
+  //focus style
+  --focus-outline: 2px solid pink;
+}
+
+.no-style-input {
+  display: --container-display;
+  align-items: --container-align-items;
+  justify-content: --container-justify-content;
+}
+
+.input-disabled {
+  opacity: var(--disabled-opacity);
+  color: var(--disabled-color);
+}
+
+.classic-input {
+  background-color: var(--input-background-color);
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  display: var(--input-display);
+  padding-left: var(--inner-padding-start);
+  padding-right: var(--inner-padding-end);
+  padding-top: var(--inner-padding-top);
+  padding-bottom: var(--inner-padding-bottom);
+  margin-left: var(--input-margin-left);
+  margin-right: var(--input-margin-right);
+  margin-top: var(--input-margin-top);
+  margin-bottom: var(--input-margin-bottom);
+  &:focus {
+    outline: var(--focus-outline);
+  }
+}
+
+.input-error {
+  color: var(--input-error-color);
+  font-weight: var(--input-error-font-weight);
+  font-size: var(--input-error-font-size);
+  margin-top: var(--input-error-margin-top);
+  margin-right: var(--input-error-margin-right);
+  margin-bottom: var(--input-error-margin-bottom);
+  margin-left: var(--input-error-margin-left)
+}
+
+.label {
+  color: var(--label-color);
+  font-weight: var(--label-weight);
+  font-size: var(--label-font-size);
+  margin-right: var(--label-margin-right);
+  margin-bottom: var(--label-margin-bottom);
+}

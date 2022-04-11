@@ -1,16 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { NoStyleComponent } from './no-style.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InputModule } from './input/input.module';
 
 
 
 @NgModule({
-  declarations: [
-    NoStyleComponent
-  ],
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    InputModule,
   ],
   exports: [
-    NoStyleComponent
-  ]
+    InputModule,
+  ],
 })
 export class NoStyleModule { }

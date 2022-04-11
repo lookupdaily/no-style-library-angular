@@ -1,0 +1,9 @@
+<div class="no-style-input">
+  <div class="input-container">
+    <label class="label" [for]="id">{{ label }}</label>
+    <ng-container *ngIf="isInputType; else customInputTemplate">
+      <input [attr.id]="id" [name]="id" [formControl]="control" class="classic-input" [ngClass]="{'disabled': control.disabled}"/>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="control.errors" class="input-error" [ngTemplateOutlet]="errorTemplate"></ng-container>
+</div>
