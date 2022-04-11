@@ -33,6 +33,9 @@ export class InputComponent implements OnChanges {
   @Input() showLabel = true;
   @Input() showError = true;
 
+  @Output() change = new EventEmitter<any>();
+  @Output() blur = new EventEmitter<any>();
+
   readonly id: string = `NS-input-${nextId++}`;
 
   isInputType = true;
@@ -71,5 +74,13 @@ export class InputComponent implements OnChanges {
     if (this.formControlDirective?.valueAccessor) {
       this.formControlDirective.valueAccessor.setDisabledState(isDisabled);
     }
+  }
+
+  onChange($event: any): void {
+    this.change.emit($event);
+  }
+
+  onBlur($event: any): void {
+    this.blur.emit($event);
   }
 }

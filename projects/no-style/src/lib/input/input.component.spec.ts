@@ -48,7 +48,31 @@ describe('InputComponent', () => {
     expect(label.nativeElement.innerHTML).toContain('Address');
   });
 
-  it('should display any reactive form errors if matching validation message is given', fakeAsync(() => {
+  it('should emit change event for text field value change', () => {
+    spyOn(inputComponent.change, 'emit');
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+    const event = new Event('input');
+
+    input.value = 'TestError';
+    input.dispatchEvent(event);
+    fixture.detectChanges();
+
+    expect(inputComponent.change.emit).toHaveBeenCalledWith(event);
+  });
+
+  it('should emit blur event for text field value change on blur', () => {
+    spyOn(inputComponent.blur, 'emit');
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+    const event = new Event('blur');
+
+    input.value = 'TestError';
+    input.dispatchEvent(event);
+    fixture.detectChanges();
+
+    expect(inputComponent.blur.emit).toHaveBeenCalledWith(event);
+  });
+
+  it('should display any reactive form errors if matching validation message is given', () => {
     const errorMessages = [{
       name: 'maxlength',
       text: 'Value should be less than 5 characters',
@@ -58,20 +82,16 @@ describe('InputComponent', () => {
     component.form = new FormGroup({
       test: new FormControl('', Validators.maxLength(5)),
     })
-    tick(50);
     fixture.detectChanges();
     expect(fixture.debugElement.nativeElement.innerHTML).not.toContain('Value should be less than 5 characters');
 
     const input = fixture.debugElement.query(By.css('input')).nativeElement;
     input.value = 'TestError';
     input.dispatchEvent(new Event('input'));
-    tick(50);
     fixture.detectChanges();
 
-    console.log(component.form);
-    console.log(inputComponent.control);
     expect(fixture.debugElement.nativeElement.innerHTML).toContain('Value should be less than 5 characters');
-  }));
+  });
 
   describe('When select type is specified', () => {
     beforeEach(() => {
@@ -95,7 +115,17 @@ describe('InputComponent', () => {
       const optionsElements = fixture.debugElement.queryAll(By.css('option'));
 
       expect(optionsElements.length).toBe(2);
+    });
 
+    it('should emit change event for text field value change', () => {
+      spyOn(inputComponent.change, 'emit');
+      const input = fixture.debugElement.query(By.css('select')).nativeElement;
+      const event = new Event('change');
+      input.value = 'TestError';
+      input.dispatchEvent(event);
+      fixture.detectChanges();
+
+      expect(inputComponent.change.emit).toHaveBeenCalledWith(event);
     });
   });
 });

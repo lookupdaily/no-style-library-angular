@@ -12,8 +12,6 @@ import { InputModule } from './input/input.module';
     CommonModule,
     InputModule,
   ],
-  exports: [
-    InputModule,
-  ],
+  exports: [InputModule],
 })
 export class NoStyleModule { }

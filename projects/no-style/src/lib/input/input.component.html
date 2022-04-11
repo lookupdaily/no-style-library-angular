@@ -2,26 +2,41 @@
   <div class="input-container">
     <label class="label" [for]="id">{{ label }}</label>
     <ng-container *ngIf="isInputType; else customInputTemplate">
-      <input [attr.id]="id" [name]="id" [formControl]="control" class="classic-input" [ngClass]="{'disabled': control.disabled}"/>
+      <input
+        [attr.id]="id"
+        [name]="id"
+        [formControl]="control"
+        class="classic-input"
+        [ngClass]="{ disabled: control.disabled }"
+        (blur)="onBlur($event)"
+        (input)="onChange($event)"
+      />
     </ng-container>
   </div>
-  <ng-container *ngIf="control.errors" class="input-error" [ngTemplateOutlet]="errorTemplate"></ng-container>
+  <ng-container
+    *ngIf="control.errors"
+    class="input-error"
+    [ngTemplateOutlet]="errorTemplate"
+  ></ng-container>
 </div>
 
 <ng-template #customInputTemplate>
-  <select *ngIf="type === inputTypes.select" [ngClass]="{'disabled': control.disabled}" [formControl]="control">
-    <option *ngFor="let option of options" value="option.value">{{ option.label }}</option>
+  <select
+    *ngIf="type === inputTypes.select"
+    [ngClass]="{ disabled: control.disabled }"
+    [formControl]="control"
+    (change)="onChange($event)"
+  >
+    <option *ngFor="let option of options" value="option.value">
+      {{ option.label }}
+    </option>
   </select>
 </ng-template>
 
 <ng-template #errorTemplate>
   <ng-container *ngFor="let message of errorMessages">
-    <ng-container
-      *ngIf="control.errors[message.name]"
-    >
-      <ng-container
-        *ngIf="message.showErrorOnChange; else errorAfterTouched"
-      >
+    <ng-container *ngIf="control.errors[message.name]">
+      <ng-container *ngIf="message.showErrorOnChange; else errorAfterTouched">
         <p class="input-error">{{ message.text }}</p>
       </ng-container>
       <ng-template #errorAfterTouched>
