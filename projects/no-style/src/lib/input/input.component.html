@@ -7,3 +7,9 @@
   </div>
   <ng-container *ngIf="control.errors" class="input-error" [ngTemplateOutlet]="errorTemplate"></ng-container>
 </div>
+
+<ng-template #customInputTemplate>
+  <select *ngIf="type === inputTypes.select" [ngClass]="{'disabled': control.disabled}" [formControl]="control">
+    <option *ngFor="let option of options" value="option.value">{{ option.label }}</option>
+  </select>
+</ng-template>
