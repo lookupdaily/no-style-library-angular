@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ControlContainer, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { NSInputTypes } from './input.constants';
-import { NSInputOption, NSInputType, NSValidator } from './input.types';
+import { NSInputOption, NSInputType, NSErrorMessage } from './input.types';
 
 let nextId = 0;
 
@@ -27,9 +27,8 @@ export class InputComponent implements OnChanges {
   @Input() disabled = false;
   @Input() label: string = '';
   @Input() type: NSInputType = 'text';
-  @Input() validators: NSValidator[] = [];
   @Input() options: NSInputOption[] = [];
-  @Input() errors: any;
+  @Input() errorMessages: NSErrorMessage[] = [];
 
   @Input() showLabel = true;
   @Input() showError = true;
@@ -40,7 +39,7 @@ export class InputComponent implements OnChanges {
   inputTypes = NSInputTypes;
 
   get control() {
-    return this.formControl || this.controlContainer?.control?.get(this.formControlName) as FormControl;
+    return this.formControl || this.controlContainer.control?.get(this.formControlName) as FormControl;
   }
 
   constructor(private controlContainer: ControlContainer) { }

@@ -13,3 +13,22 @@
     <option *ngFor="let option of options" value="option.value">{{ option.label }}</option>
   </select>
 </ng-template>
+
+<ng-template #errorTemplate>
+  <ng-container *ngFor="let message of errorMessages">
+    <ng-container
+      *ngIf="control.errors[message.name]"
+    >
+      <ng-container
+        *ngIf="message.showErrorOnChange; else errorAfterTouched"
+      >
+        <p class="input-error">{{ message.text }}</p>
+      </ng-container>
+      <ng-template #errorAfterTouched>
+        <ng-container *ngIf="showError">
+          <p class="input-error">{{ message.text }}</p>
+        </ng-container>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</ng-template>

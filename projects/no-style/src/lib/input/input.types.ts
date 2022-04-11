@@ -3,7 +3,7 @@ export type NSInputType = "text" | "date" | "radio" | "checkbox" | "select" | "t
 export interface NSInput {
   id: string;
   label: string;
-  validators: NSValidator[];
+  validators: NSErrorMessage[];
 }
 
 export interface NSInputOption {
@@ -11,8 +11,8 @@ export interface NSInputOption {
   label: string;
 }
 
-export interface NSValidator {
+export interface NSErrorMessage {
   name: string;
-  message: string;
+  text: string;
   showErrorOnChange?: boolean;
 }

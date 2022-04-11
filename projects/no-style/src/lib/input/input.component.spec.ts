@@ -1,6 +1,6 @@
 import { Component, NO_ERRORS_SCHEMA, SimpleChange, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { InputComponent } from './input.component';
@@ -41,7 +41,6 @@ describe('InputComponent', () => {
   });
 
   it('should have an accessible name via label', () => {
-    inputComponent = component.input;
     inputComponent.label = 'Address';
     fixture.detectChanges();
 
@@ -49,7 +48,32 @@ describe('InputComponent', () => {
     expect(label.nativeElement.innerHTML).toContain('Address');
   });
 
-    describe('When select type is specified', () => {
+  it('should display any reactive form errors if matching validation message is given', fakeAsync(() => {
+    const errorMessages = [{
+      name: 'maxlength',
+      text: 'Value should be less than 5 characters',
+      showErrorOnChange: true,
+    }];
+    inputComponent.errorMessages = errorMessages;
+    component.form = new FormGroup({
+      test: new FormControl('', Validators.maxLength(5)),
+    })
+    tick(50);
+    fixture.detectChanges();
+    expect(fixture.debugElement.nativeElement.innerHTML).not.toContain('Value should be less than 5 characters');
+
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+    input.value = 'TestError';
+    input.dispatchEvent(new Event('input'));
+    tick(50);
+    fixture.detectChanges();
+
+    console.log(component.form);
+    console.log(inputComponent.control);
+    expect(fixture.debugElement.nativeElement.innerHTML).toContain('Value should be less than 5 characters');
+  }));
+
+  describe('When select type is specified', () => {
     beforeEach(() => {
       inputComponent.type = 'select';
       inputComponent.ngOnChanges({type: createSimpleChange(inputComponent.type)});
@@ -89,7 +113,6 @@ export class TestReactiveFormHostComponent {
   public input!: InputComponent;
 
   form: FormGroup =  new FormGroup({
-    test: new FormControl({value: 'Nancy', disabled: true}),
-    test1: new FormControl(''),
+    test: new FormControl(''),
   });
 }
