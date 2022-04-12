@@ -1,5 +1,5 @@
 import { Component, NO_ERRORS_SCHEMA, SimpleChange, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
@@ -12,7 +12,11 @@ describe('InputComponent', () => {
   let inputComponent: InputComponent;
 
   const createSimpleChange = (newValue: any): SimpleChange => {
-    return new SimpleChange(null, newValue, true)
+    return new SimpleChange(null, newValue, true);
+  }
+
+  const getInputElement = (): HTMLInputElement => {
+    return fixture.debugElement.query(By.css('input')).nativeElement;
   }
 
   beforeEach(async () => {
@@ -36,8 +40,8 @@ describe('InputComponent', () => {
   });
 
   it('should render a text input by default', () => {
-    const input = fixture.debugElement.query(By.css('input'));
-    expect(input.nativeElement.type).toBe('text');
+    const input = getInputElement();
+    expect(input.type).toBe('text');
   });
 
   it('should have an accessible name via label', () => {
@@ -50,11 +54,11 @@ describe('InputComponent', () => {
 
   it('should emit change event for text field value change', () => {
     spyOn(inputComponent.change, 'emit');
-    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+    const nativeInputElement = getInputElement();
     const event = new Event('input');
 
-    input.value = 'TestError';
-    input.dispatchEvent(event);
+    nativeInputElement.value = 'Test';
+    nativeInputElement.dispatchEvent(event);
     fixture.detectChanges();
 
     expect(inputComponent.change.emit).toHaveBeenCalledWith(event);
@@ -62,11 +66,11 @@ describe('InputComponent', () => {
 
   it('should emit blur event for text field value change on blur', () => {
     spyOn(inputComponent.blur, 'emit');
-    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+    const nativeInputElement = getInputElement();
     const event = new Event('blur');
 
-    input.value = 'TestError';
-    input.dispatchEvent(event);
+    nativeInputElement.value = 'Test';
+    nativeInputElement.dispatchEvent(event);
     fixture.detectChanges();
 
     expect(inputComponent.blur.emit).toHaveBeenCalledWith(event);
@@ -85,12 +89,28 @@ describe('InputComponent', () => {
     fixture.detectChanges();
     expect(fixture.debugElement.nativeElement.innerHTML).not.toContain('Value should be less than 5 characters');
 
-    const input = fixture.debugElement.query(By.css('input')).nativeElement;
-    input.value = 'TestError';
-    input.dispatchEvent(new Event('input'));
+    const nativeInputElement = getInputElement();
+    nativeInputElement.value = 'TestError';
+    nativeInputElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
     expect(fixture.debugElement.nativeElement.innerHTML).toContain('Value should be less than 5 characters');
+  });
+
+  it('should show disabled syles', () => {
+    spyOn(inputComponent.change, 'emit');
+    component.form = new FormGroup({
+      test: new FormControl({value: 'Nancy', disabled: true}),
+    })
+    fixture.detectChanges();
+
+    const nativeInputElement = getInputElement();
+    expect(nativeInputElement.disabled).toBeTrue();
+    expect(nativeInputElement.classList).toContain('disabled');
+  });
+
+  it('should reflect host styles using css variables', () => {
+
   });
 
   describe('When select type is specified', () => {
@@ -119,14 +139,26 @@ describe('InputComponent', () => {
 
     it('should emit change event for text field value change', () => {
       spyOn(inputComponent.change, 'emit');
-      const input = fixture.debugElement.query(By.css('select')).nativeElement;
+      const nativeInputElement = fixture.debugElement.query(By.css('select')).nativeElement;
       const event = new Event('change');
-      input.value = 'TestError';
-      input.dispatchEvent(event);
+      nativeInputElement.value = 'TestError';
+      nativeInputElement.dispatchEvent(event);
       fixture.detectChanges();
 
       expect(inputComponent.change.emit).toHaveBeenCalledWith(event);
     });
+  });
+
+  describe('When radio type is specificed', () => {
+
+  });
+
+  describe('When checkbox type is specified', () => {
+
+  });
+
+  describe('When date type is specified', () => {
+
   });
 });
 
