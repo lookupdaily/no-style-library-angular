@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -37,14 +37,6 @@ describe('RadioGroupComponent', () => {
     expect(radioGroupComponent).toBeTruthy();
   });
 
-  it('should display the given label as a legend element', () => {
-    radioGroupComponent.label = 'Contact';
-    fixture.detectChanges();
-
-    const legend = fixture.debugElement.query(By.css('legend'));
-    expect(legend.nativeElement.innerHTML).toContain('Contact');
-  });
-
   it('renders a list of given options, wrapped in accessible label', () => {
     const labelElements = fixture.debugElement.queryAll(By.css('label'));
     expect(labelElements.length).toBe(2);
@@ -62,9 +54,6 @@ describe('RadioGroupComponent', () => {
     expect(radioGroupComponent.valueChange.emit).toHaveBeenCalled();
   });
 
-  it('should change the order of input and label depending on input', () => {
-
-  });
 });
 
 

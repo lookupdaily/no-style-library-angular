@@ -36,16 +36,18 @@
     </select>
   </ng-container>
 
-  <ns-radio-group
-    *ngIf="type === inputTypes.radio"
-    [formControl]="control"
-    [options]="options"
-    [id]="id"
-    [label]="label"
-    [showLabel]="showLabel"
-    (valueChange)="onChange($event)"
-  >
-  </ns-radio-group>
+  <fieldset *ngIf="type === inputTypes.radio">
+    <legend>{{ label }}</legend>
+    <ns-radio-group
+      [formControl]="control"
+      [options]="options"
+      [id]="id"
+      [label]="label"
+      [showLabel]="showLabel"
+      (valueChange)="onChange($event)"
+    >
+    </ns-radio-group>
+  </fieldset>
 </ng-template>
 
 <ng-template #errorTemplate>

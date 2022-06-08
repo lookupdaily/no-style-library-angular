@@ -165,6 +165,14 @@ describe('InputComponent', () => {
       expect(radioGroupComponent).toBeTruthy();
     });
 
+    it('should display the given label as a legend element', () => {
+      inputComponent.label = 'Contact';
+      fixture.detectChanges();
+
+      const legend = fixture.debugElement.query(By.css('legend'));
+      expect(legend.nativeElement.innerHTML).toContain('Contact');
+    });
+
     it('should listen for change event and emit change', () => {
       spyOn(inputComponent.change, 'emit');
       const event = new Event('valueChange');
