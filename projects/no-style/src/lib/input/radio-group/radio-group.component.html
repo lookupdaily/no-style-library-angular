@@ -1,0 +1,16 @@
+<fieldset>
+  <legend>{{ label }}</legend>
+  <div>
+    <label *ngFor="let option of options">
+      <input
+        type="radio"
+        [attr.id]="id"
+        [name]="id"
+        [value]="option.value"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        />
+      {{ option.label }}
+    </label>
+  </div>
+</fieldset>

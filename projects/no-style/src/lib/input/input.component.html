@@ -1,7 +1,7 @@
 <div class="no-style-input">
   <div class="input-container">
-    <label class="label" [for]="id">{{ label }}</label>
     <ng-container *ngIf="isInputType; else customInputTemplate">
+      <label class="label" [for]="id">{{ label }}</label>
       <input
         [attr.id]="id"
         [name]="id"
@@ -21,16 +21,31 @@
 </div>
 
 <ng-template #customInputTemplate>
-  <select
-    *ngIf="type === inputTypes.select"
-    [ngClass]="{ disabled: control.disabled }"
+  <ng-container *ngIf="type === inputTypes.select">
+    <label class="label" [for]="id">{{ label }}</label>
+    <select
+      [attr.id]="id"
+      [name]="id"
+      [ngClass]="{ disabled: control.disabled }"
+      [formControl]="control"
+      (change)="onChange($event)"
+    >
+      <option *ngFor="let option of options" value="option.value">
+        {{ option.label }}
+      </option>
+    </select>
+  </ng-container>
+
+  <ns-radio-group
+    *ngIf="type === inputTypes.radio"
     [formControl]="control"
-    (change)="onChange($event)"
+    [options]="options"
+    [id]="id"
+    [label]="label"
+    [showLabel]="showLabel"
+    (valueChange)="onChange($event)"
   >
-    <option *ngFor="let option of options" value="option.value">
-      {{ option.label }}
-    </option>
-  </select>
+  </ns-radio-group>
 </ng-template>
 
 <ng-template #errorTemplate>

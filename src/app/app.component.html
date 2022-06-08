@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-  <ns-input label="Test" formControlName="test" class="input"></ns-input>
+  <ns-input label="Test" formControlName="test" class="input" type="radio" [options]="options"></ns-input>
   <ns-input label="Test" formControlName="test1" [errorMessages]="errorMessages"></ns-input>
 </form>
 <p>Test: {{ form.value.test }}</p>

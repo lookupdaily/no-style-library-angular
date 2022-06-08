@@ -150,7 +150,28 @@ describe('InputComponent', () => {
   });
 
   describe('When radio type is specificed', () => {
+    beforeEach(() => {
+      inputComponent.type = 'radio';
+      inputComponent.options = [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2'},
+      ];
+      inputComponent.ngOnChanges({type: createSimpleChange(inputComponent.type)});
+      fixture.detectChanges();
+    });
 
+    it('renders radio group component if input type is radio', () => {
+      const radioGroupComponent = fixture.debugElement.query(By.css('ns-radio-group'));
+      expect(radioGroupComponent).toBeTruthy();
+    });
+
+    it('should listen for change event and emit change', () => {
+      spyOn(inputComponent.change, 'emit');
+      const event = new Event('valueChange');
+      const radioGroupComponent = fixture.debugElement.query(By.css('ns-radio-group')).nativeElement;
+      radioGroupComponent.dispatchEvent(event);
+      expect(inputComponent.change.emit).toHaveBeenCalled();
+    });
   });
 
   describe('When checkbox type is specified', () => {
