@@ -1,18 +1,18 @@
 <div class="no-style-input">
-  <div class="input-container">
-    <ng-container *ngIf="isInputType; else customInputTemplate">
+  <ng-container *ngIf="isInputType; else customInputTemplate">
+    <div class="input-container">
       <label class="label" [for]="id">{{ label }}</label>
       <input
         [attr.id]="id"
-        [name]="id"
+        [name]="inputName"
         [formControl]="control"
         class="classic-input"
         [ngClass]="{ disabled: control.disabled }"
         (blur)="onBlur($event)"
         (input)="onChange($event)"
       />
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
   <ng-container
     *ngIf="control.errors"
     class="input-error"
@@ -21,11 +21,11 @@
 </div>
 
 <ng-template #customInputTemplate>
-  <ng-container *ngIf="type === inputTypes.select">
+  <div *ngIf="type === inputTypes.select" class="input-container">
     <label class="label" [for]="id">{{ label }}</label>
     <select
       [attr.id]="id"
-      [name]="id"
+      [name]="inputName"
       [ngClass]="{ disabled: control.disabled }"
       [formControl]="control"
       (change)="onChange($event)"
@@ -34,12 +34,13 @@
         {{ option.label }}
       </option>
     </select>
-  </ng-container>
+  </div>
 
-  <fieldset *ngIf="type === inputTypes.radio">
+  <fieldset *ngIf="type === inputTypes.radio" role="radiogroup" class="input-container">
     <legend>{{ label }}</legend>
     <ns-radio-group
       [formControl]="control"
+      [name]="inputName"
       [options]="options"
       [id]="id"
       [label]="label"

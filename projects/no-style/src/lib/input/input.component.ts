@@ -24,6 +24,7 @@ export class InputComponent implements OnChanges {
   @Input() formControl: FormControl | undefined;
 
   @Input() formControlName: string = '';
+  @Input() name: string = '';
   @Input() disabled = false;
   @Input() label: string = '';
   @Input() type: NSInputType = 'text';
@@ -43,6 +44,10 @@ export class InputComponent implements OnChanges {
 
   get control() {
     return this.formControl || this.controlContainer.control?.get(this.formControlName) as FormControl;
+  }
+
+  get inputName(): string {
+    return this.formControlName || this.name || this.id;
   }
 
   constructor(private controlContainer: ControlContainer) { }

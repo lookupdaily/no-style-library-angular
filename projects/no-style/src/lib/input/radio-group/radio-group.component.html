@@ -1,13 +1,12 @@
-<div class="radio-group">
-  <label *ngFor="let option of options" class="radio-item">
-    <input
-      type="radio"
-      [attr.id]="id"
-      [name]="id"
-      [value]="option.value"
-      [ngModel]="value"
-      (ngModelChange)="onValueChange($event)"
-      />
-    {{ option.label }}
-  </label>
+<div *ngFor="let option of options; index as i" class="nsinput-group-item-wrapper">
+  <input
+    type="radio"
+    [attr.id]="id + '-' + i"
+    [name]="name"
+    [value]="option.value"
+    [ngModel]="value"
+    (ngModelChange)="onValueChange($event)"
+    class="nsinput-group-item-input"
+  />
+  <label class="nsinput-group-item-label" [for]="id + '-' + i">{{ option.label }}</label>
 </div>

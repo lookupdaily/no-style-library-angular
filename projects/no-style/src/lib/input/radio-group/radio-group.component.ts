@@ -16,6 +16,7 @@ const RADIO_VALUE_ACCESSOR: any = {
 })
 export class RadioGroupComponent implements ControlValueAccessor {
   @Input() label: string = '';
+  @Input() name: string = '';
   @Input() options: NSInputOption[] = [];
   @Input() showLabel = true;
   @Input() id;
