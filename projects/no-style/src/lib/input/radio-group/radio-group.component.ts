@@ -12,7 +12,7 @@ const RADIO_VALUE_ACCESSOR: any = {
   selector: 'ns-radio-group',
   providers: [RADIO_VALUE_ACCESSOR],
   templateUrl: './radio-group.component.html',
-  styleUrls: ['./radio-group.component.scss']
+  styleUrls: ['../input.component.scss']
 })
 export class RadioGroupComponent implements ControlValueAccessor {
   @Input() label: string = '';

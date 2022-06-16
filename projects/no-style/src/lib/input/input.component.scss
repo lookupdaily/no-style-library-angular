@@ -1,6 +1,6 @@
 :host {
   // Input style
-  --input-border: 1px solid aqua;
+  --input-border: 1px solid black;
   --input-border-radius: 0.25rem;
   --input-background-color: ;
 
@@ -13,10 +13,12 @@
   // Input text style
 
   // Label/Input display
-  --input-display: inline-block;
-  --form-group-display: block;
-  --align-items: baseline;
-  --justify-content: flex-start;
+  --input-display: flex;
+  --input-align-items: baseline;
+  --input-justify-content: flex-start;
+  --form-group-display: flex;
+  --form-group-align-items: baseline;
+  --form-group-justify-content: flex-start;
   --input-margin-right: 0;
   --input-margin-left: 0;
   --input-margin-top: 0;
@@ -25,6 +27,7 @@
   --label-margin-bottom: 0;
   --label-margin-left: 0;
   --label-margin-top: 0;
+  --input-container-border: none;
 
   // Label style
   --label-color: inherit;
@@ -35,6 +38,11 @@
   --container-display: block;
   --container-align-items: baseline;
   --container-justify-content: flex-start;
+
+  //Options group display
+  --options-display: flex;
+  --options-align-items: baseline;
+  --options-justify-content: flex-start;
 
   // Error style
   --input-error-color: red;
@@ -51,6 +59,30 @@
 
   //focus style
   --focus-outline: 2px solid pink;
+}
+
+// reset styles
+
+legend {
+  display: table;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+}
+
+fieldset {
+  padding: 0.01em 0 0 0;
+  margin: 0;
+  min-width: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block-start: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  min-inline-size: unset;
+}
+
+:host:not(:-moz-handler-blocked) fieldset {
+  display: table-cell;
 }
 
 .no-style-input {
@@ -98,4 +130,34 @@
   font-size: var(--label-font-size);
   margin-right: var(--label-margin-right);
   margin-bottom: var(--label-margin-bottom);
+}
+
+.input-container {
+
+  display: var(--form-group-display);
+  align-items: var(--form-group-align-items);
+  justify-content: var(--form-group-justify-content);
+}
+
+
+.nsinput-option-input {
+  margin-left: 0;
+}
+
+.nsfieldset {
+  border: var(--input-container-border);
+}
+
+.nsinput-option-wrapper {
+  display: var(--input-display);
+  margin-top: var(--input-margin-top);
+  margin-right: var(--input-margin-right);
+  margin-bottom: var(--input-margin-bottom);
+  margin-left: var(--input-margin-left);
+}
+
+ns-radio-group {
+  display: var(--options-display);
+  align-items: var(--options-align-items);
+  justify-content: var(--options-justify-content);
 }
