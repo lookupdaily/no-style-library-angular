@@ -1,8 +1,29 @@
 <form [formGroup]="form">
-  <ns-input label="Test" formControlName="test" class="input" type="radio" [options]="options"></ns-input>
-  <ns-input label="Test" formControlName="test1" [errorMessages]="errorMessages"></ns-input>
+  <ns-input
+    label="Test"
+    formControlName="test"
+    class="input"
+    type="radio"
+    [options]="options"
+  ></ns-input>
+  <ns-input
+    label="Test"
+    formControlName="test2"
+    class="input"
+    type="checkbox"
+    [options]="options"
+    id="check"
+    name="check"
+  ></ns-input>
+  <ns-input
+    label="Test"
+    formControlName="test1"
+    [errorMessages]="errorMessages"
+  ></ns-input>
 </form>
 <p>Test: {{ form.value.test }}</p>
 <p>Test 1: {{ form.value.test1 }}</p>
 
+<button (click)="updateCheckboxValue()">Update checkbox value</button>
+<button (click)="addFormOption()">Add option</button>
 <router-outlet></router-outlet>

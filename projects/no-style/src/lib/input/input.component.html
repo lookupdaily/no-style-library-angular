@@ -36,7 +36,12 @@
     </select>
   </div>
 
-  <fieldset *ngIf="type === inputTypes.radio" role="radiogroup" class="nsfieldset" aria-labelledby="legend">
+  <fieldset
+    *ngIf="type === inputTypes.radio"
+    role="radiogroup"
+    class="nsfieldset"
+    aria-labelledby="legend"
+  >
     <div class="input-container">
       <legend class="label" id="legend">{{ label }}</legend>
       <ns-radio-group
@@ -49,6 +54,26 @@
         (valueChange)="onChange($event)"
       >
       </ns-radio-group>
+    </div>
+  </fieldset>
+
+  <fieldset
+    *ngIf="type === inputTypes.checkbox"
+    class="nsfieldset"
+    aria-labelledby="legend"
+  >
+    <div class="input-container">
+      <legend class="label" id="legend">{{ label }}</legend>
+      <ns-checkbox-group
+        [formControl]="control"
+        [name]="inputName"
+        [options]="options"
+        [id]="id"
+        [label]="label"
+        [showLabel]="showLabel"
+        (valueChange)="onChange($event)"
+      >
+      </ns-checkbox-group>
     </div>
   </fieldset>
 </ng-template>
