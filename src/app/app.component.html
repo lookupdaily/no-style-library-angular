@@ -16,6 +16,14 @@
     name="check"
   ></ns-input>
   <ns-input
+  label="Test"
+  formControlName="test3"
+  class="input"
+  type="checkbox"
+  id="check1"
+  name="check1"
+></ns-input>
+  <ns-input
     label="Test"
     formControlName="test1"
     [errorMessages]="errorMessages"
@@ -23,6 +31,7 @@
 </form>
 <p>Test: {{ form.value.test }}</p>
 <p>Test 1: {{ form.value.test1 }}</p>
+<p>Test 3: {{ form.value.test3 }}</p>
 
 <button (click)="updateCheckboxValue()">Update checkbox value</button>
 <button (click)="addFormOption()">Add option</button>

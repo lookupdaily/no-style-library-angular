@@ -58,6 +58,11 @@ describe('CheckboxGroupComponent', () => {
     expect(checkboxItems[0].nativeElement.innerHTML).toContain('Option 1');
   });
 
+  it('should render inputs with checkbox type', () => {
+    const firstInput = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(firstInput.type).toBe('checkbox');
+  });
+
   it('should create a form array of given options', () => {
     expect(checkboxGroupComponent.formArray.controls.length).toBe(2);
   });

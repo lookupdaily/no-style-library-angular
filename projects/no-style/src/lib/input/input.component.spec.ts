@@ -253,6 +253,27 @@ describe('InputComponent', () => {
       });
       fixture.detectChanges();
     });
+
+    it('should render a single input component with type checkbox', () => {
+      const inputs = fixture.debugElement.queryAll(By.css('input'));
+      expect(inputs.length).toBe(1);
+      expect(inputs[0].nativeElement.type).toBe('checkbox');
+    });
+
+    it('should have value true if checked', () => {
+      const input = getInputElement();
+      input.click();
+
+      expect(component.form.value.test).toBe(true);
+    });
+
+    it('input element should be checked on render if form value is true', () => {
+      component.form.get('test').setValue(true);
+      fixture.detectChanges();
+
+      const input = getInputElement();
+      expect(input.checked).toBe(true);
+    })
   });
 
   describe('When date type is specified', () => {});

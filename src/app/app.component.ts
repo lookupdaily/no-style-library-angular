@@ -22,6 +22,7 @@ export class AppComponent {
     test: new FormControl(''),
     test1: new FormControl('', Validators.max(10)),
     test2: new FormControl(['1']),
+    test3: new FormControl(true),
   });
 
   errorMessages: NSErrorMessage[] = [

@@ -53,7 +53,11 @@ describe('RadioGroupComponent', () => {
       );
     expect(isAllLabelsContainingInput()).toBeTrue();
     expect(radioItems[0].nativeElement.innerHTML).toContain('Option 1');
+  });
 
+  it('should render inputs with radio type', () => {
+    const firstInput = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(firstInput.type).toBe('radio');
   });
 
   it('should emit change event for radio change', () => {

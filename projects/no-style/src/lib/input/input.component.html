@@ -6,6 +6,7 @@
         [attr.id]="id"
         [name]="inputName"
         [formControl]="control"
+        [type]="type"
         class="classic-input"
         [ngClass]="{ disabled: control.disabled }"
         (blur)="onBlur($event)"
@@ -58,7 +59,7 @@
   </fieldset>
 
   <fieldset
-    *ngIf="type === inputTypes.checkbox"
+    *ngIf="type === inputTypes.checkbox && options?.length > 0"
     class="nsfieldset"
     aria-labelledby="legend"
   >
@@ -76,6 +77,20 @@
       </ns-checkbox-group>
     </div>
   </fieldset>
+
+  <div *ngIf="type === inputTypes.checkbox && (!options || options.length === 0)" class="input-container">
+    <input
+        type="checkbox"
+        [attr.id]="id"
+        [name]="inputName"
+        [formControl]="control"
+        class="classic-input"
+        [ngClass]="{ disabled: control.disabled }"
+        (blur)="onBlur($event)"
+        (input)="onChange($event)"
+      />
+    <label class="label" [for]="id">{{ label }}</label>
+  </div>
 </ng-template>
 
 <ng-template #errorTemplate>
