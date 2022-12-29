@@ -1,10 +1,30 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ControlContainer, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  ControlContainer,
+  FormControl,
+  FormControlDirective,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 import { NSInputTypes } from './input.constants';
 import { NSInputOption, NSInputType, NSErrorMessage } from './input.types';
 
 let nextId = 0;
+const classicInputTypes: NSInputType[] = [
+  NSInputTypes.text,
+  NSInputTypes.email,
+  NSInputTypes.number,
+  NSInputTypes.password,
+  NSInputTypes.url,
+];
 
 @Component({
   selector: 'ns-input',
@@ -13,7 +33,7 @@ let nextId = 0;
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      multi:true,
+      multi: true,
       useExisting: InputComponent,
     },
   ],
@@ -43,23 +63,21 @@ export class InputComponent implements OnChanges {
   inputTypes = NSInputTypes;
 
   get control() {
-    return this.formControl || this.controlContainer.control?.get(this.formControlName) as FormControl;
+    return (
+      this.formControl ||
+      (this.controlContainer.control?.get(this.formControlName) as FormControl)
+    );
   }
 
   get inputName(): string {
     return this.formControlName || this.name || this.id;
   }
 
-  constructor(private controlContainer: ControlContainer) { }
+  constructor(private controlContainer: ControlContainer) {}
 
   ngOnChanges({ type }: SimpleChanges): void {
     if (type) {
-      this.isInputType =
-        this.type === NSInputTypes.text ||
-        this.type === NSInputTypes.email ||
-        this.type === NSInputTypes.number ||
-        this.type === NSInputTypes.password ||
-        this.type === NSInputTypes.url;
+      this.isInputType = classicInputTypes.includes(this.type);
     }
   }
 
