@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { SpecsUtility } from 'projects/no-style/src/tests/specs.utils';
+import { SpecsUtility } from 'tests/specs.utils';
 import { InputModule } from '../input.module';
 
 import { CheckboxGroupComponent } from './checkbox-group.component';

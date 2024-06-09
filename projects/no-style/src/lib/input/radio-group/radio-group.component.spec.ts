@@ -1,5 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, ViewChild } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import {
   FormControl,
   FormGroup,
@@ -7,14 +7,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { ComponentObjectModel } from 'tests/component-object-model/component-object-model';
 import { InputModule } from '../input.module';
 
 import { RadioGroupComponent } from './radio-group.component';
 
 describe('RadioGroupComponent', () => {
-  let component: TestReactiveFormHostComponent;
-  let fixture: ComponentFixture<TestReactiveFormHostComponent>;
-  let radioGroupComponent: RadioGroupComponent;
+  let testComponent: TestComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,50 +24,20 @@ describe('RadioGroupComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestReactiveFormHostComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    radioGroupComponent = component.radioGroup;
-    radioGroupComponent.options = [
-      { value: '1', label: 'Option 1' },
-      { value: '2', label: 'Option 2' },
-    ];
-    fixture.detectChanges();
+    testComponent = new TestComponent();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-    expect(radioGroupComponent).toBeTruthy();
+  it('renders matching count of radio items', () => {
+    testComponent.expect.toHaveRadioOptionsWithLengthMatchingProvidedOptions();
+  })
+
+  it('renders a labelled radio input for each option', () => {
+    testComponent.expect.eachOptionToHaveMatchingLabelledRadioInput();
   });
 
-  it('renders a list of given options, each with accessible label', () => {
-    const radioItems = fixture.debugElement.queryAll(By.css('div'));
-    expect(radioItems.length).toBe(2);
-
-    const isAllLabelsContainingInput = () =>
-      Array.from(radioItems).every(
-        (radioItem) =>
-          radioItem.nativeElement.innerHTML.includes('input') &&
-          radioItem.nativeElement.innerHTML.includes('label')
-      );
-    expect(isAllLabelsContainingInput()).toBeTrue();
-    expect(radioItems[0].nativeElement.innerHTML).toContain('Option 1');
-  });
-
-  it('should render inputs with radio type', () => {
-    const firstInput = fixture.debugElement.query(By.css('input')).nativeElement;
-    expect(firstInput.type).toBe('radio');
-  });
-
-  it('should emit change event for radio change', () => {
-    spyOn(radioGroupComponent.valueChange, 'emit');
-    const nativeInputElement = fixture.debugElement.query(
-      By.css('input')
-    ).nativeElement;
-    nativeInputElement.click();
-    fixture.detectChanges();
-
-    expect(radioGroupComponent.valueChange.emit).toHaveBeenCalled();
+  it('should update value of form when selecting an option', () => {
+    testComponent.clickOnARadioOption();
+    testComponent.expect.valueOfFormToChange() 
   });
 });
 
@@ -90,4 +59,52 @@ export class TestReactiveFormHostComponent {
   form: FormGroup = new FormGroup({
     test: new FormControl(''),
   });
+}
+
+class TestComponent extends ComponentObjectModel<TestReactiveFormHostComponent> {
+  readonly expect: TestComponentAssertions;
+  readonly options =  [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+  ];
+  
+  readonly radioGroup = this.instance.radioGroup;
+  constructor() {
+    super(TestReactiveFormHostComponent, true)
+    this.radioGroup.options = this.options;
+    this.detectChanges()
+    this.expect = new TestComponentAssertions(this)
+  }
+
+  get formValue(): string {
+    return this.instance.form.get('test').value;
+  }
+
+  get radioOptions(): DebugElement[] {
+    return this.screen.queryAll(By.css('input'));
+  }
+
+  clickOnARadioOption(): void {
+    this.input.click();
+    this.detectChanges();
+  }
+  
+}
+
+class TestComponentAssertions {  
+  constructor (readonly component: TestComponent) {}
+
+  eachOptionToHaveMatchingLabelledRadioInput() {
+    this.component.options.forEach(option => 
+      expect(this.component.getByLabel(option.label).type).toBe('radio')
+    )
+  }
+
+  toHaveRadioOptionsWithLengthMatchingProvidedOptions() {
+    expect(this.component.radioOptions.length).toBe(this.component.options.length);
+  }
+
+  valueOfFormToChange() {
+    expect(this.component.formValue).toBe(this.component.options[0].value);
+  }
 }
