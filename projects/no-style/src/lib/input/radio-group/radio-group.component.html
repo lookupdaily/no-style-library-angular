@@ -1,12 +1,14 @@
-<div *ngFor="let option of options; index as i" class="nsinput-option-wrapper">
-  <input
-    type="radio"
-    [attr.id]="id + '-' + i"
-    [name]="name"
-    [value]="option.value"
-    [ngModel]="value"
-    (ngModelChange)="onValueChange($event)"
-    class="nsinput-option-input"
-  />
-  <label class="nsinput-option-label" [for]="id + '-' + i">{{ option.label }}</label>
-</div>
+@for (option of options; track option; let i = $index) {
+  <div class="nsinput-option-wrapper">
+    <input
+      type="radio"
+      [attr.id]="id + '-' + i"
+      [name]="name"
+      [value]="option.value"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+      class="nsinput-option-input"
+      />
+    <label class="nsinput-option-label" [for]="id + '-' + i">{{ option.label }}</label>
+  </div>
+}

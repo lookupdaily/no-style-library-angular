@@ -1,5 +1,5 @@
 <div class="no-style-input">
-  <ng-container *ngIf="isInputType; else customInputTemplate">
+  @if (isInputType) {
     <div class="input-container">
       <label class="label" [for]="id">{{ label }}</label>
       <input
@@ -11,99 +11,103 @@
         [ngClass]="{ disabled: control.disabled }"
         (blur)="onBlur($event)"
         (input)="onChange($event)"
-      />
+        />
     </div>
-  </ng-container>
-  <ng-container
-    *ngIf="control.errors"
-    class="input-error"
-    [ngTemplateOutlet]="errorTemplate"
-  ></ng-container>
+  } @else {
+    @if (type === inputTypes.select) {
+      <div class="input-container">
+        <label class="label" [for]="id">{{ label }}</label>
+        <select
+          [attr.id]="id"
+          [name]="inputName"
+          [ngClass]="{ disabled: control.disabled }"
+          [formControl]="control"
+          (change)="onChange($event)"
+          >
+          @for (option of options; track option) {
+            <option value="option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+      </div>
+    }
+    @if (type === inputTypes.radio) {
+      <fieldset
+        role="radiogroup"
+        class="nsfieldset"
+        aria-labelledby="legend"
+        >
+        <div class="input-container">
+          <legend class="label" id="legend">{{ label }}</legend>
+          <ns-radio-group
+            [formControl]="control"
+            [name]="inputName"
+            [options]="options"
+            [id]="id"
+            [label]="label"
+            [showLabel]="showLabel"
+            (valueChange)="onChange($event)"
+            >
+          </ns-radio-group>
+        </div>
+      </fieldset>
+    }
+    @if (type === inputTypes.checkbox && options?.length > 0) {
+      <fieldset
+        class="nsfieldset"
+        aria-labelledby="legend"
+        >
+        <div class="input-container">
+          <legend class="label" id="legend">{{ label }}</legend>
+          <ns-checkbox-group
+            [formControl]="control"
+            [name]="inputName"
+            [options]="options"
+            [id]="id"
+            [label]="label"
+            [showLabel]="showLabel"
+            (valueChange)="onChange($event)"
+            >
+          </ns-checkbox-group>
+        </div>
+      </fieldset>
+    }
+    @if (type === inputTypes.checkbox && (!options || options.length === 0)) {
+      <div class="input-container">
+        <input
+          type="checkbox"
+          [attr.id]="id"
+          [name]="inputName"
+          [formControl]="control"
+          class="classic-input"
+          [ngClass]="{ disabled: control.disabled }"
+          (blur)="onBlur($event)"
+          (input)="onChange($event)"
+          />
+        <label class="label" [for]="id">{{ label }}</label>
+      </div>
+    }
+  }
+  @if (control.errors) {
+    <ng-container
+      class="input-error"
+      [ngTemplateOutlet]="errorTemplate"
+    ></ng-container>
+  }
 </div>
 
-<ng-template #customInputTemplate>
-  <div *ngIf="type === inputTypes.select" class="input-container">
-    <label class="label" [for]="id">{{ label }}</label>
-    <select
-      [attr.id]="id"
-      [name]="inputName"
-      [ngClass]="{ disabled: control.disabled }"
-      [formControl]="control"
-      (change)="onChange($event)"
-    >
-      <option *ngFor="let option of options" value="option.value">
-        {{ option.label }}
-      </option>
-    </select>
-  </div>
-
-  <fieldset
-    *ngIf="type === inputTypes.radio"
-    role="radiogroup"
-    class="nsfieldset"
-    aria-labelledby="legend"
-  >
-    <div class="input-container">
-      <legend class="label" id="legend">{{ label }}</legend>
-      <ns-radio-group
-        [formControl]="control"
-        [name]="inputName"
-        [options]="options"
-        [id]="id"
-        [label]="label"
-        [showLabel]="showLabel"
-        (valueChange)="onChange($event)"
-      >
-      </ns-radio-group>
-    </div>
-  </fieldset>
-
-  <fieldset
-    *ngIf="type === inputTypes.checkbox && options?.length > 0"
-    class="nsfieldset"
-    aria-labelledby="legend"
-  >
-    <div class="input-container">
-      <legend class="label" id="legend">{{ label }}</legend>
-      <ns-checkbox-group
-        [formControl]="control"
-        [name]="inputName"
-        [options]="options"
-        [id]="id"
-        [label]="label"
-        [showLabel]="showLabel"
-        (valueChange)="onChange($event)"
-      >
-      </ns-checkbox-group>
-    </div>
-  </fieldset>
-
-  <div *ngIf="type === inputTypes.checkbox && (!options || options.length === 0)" class="input-container">
-    <input
-        type="checkbox"
-        [attr.id]="id"
-        [name]="inputName"
-        [formControl]="control"
-        class="classic-input"
-        [ngClass]="{ disabled: control.disabled }"
-        (blur)="onBlur($event)"
-        (input)="onChange($event)"
-      />
-    <label class="label" [for]="id">{{ label }}</label>
-  </div>
-</ng-template>
 
 <ng-template #errorTemplate>
-  <ng-container *ngFor="let message of errorMessages">
-    <ng-container *ngIf="control.errors[message.name]">
-      <ng-container *ngIf="message.showErrorOnChange; else errorAfterTouched">
+  @for (message of errorMessages; track message) {
+    @if (control.errors[message.name]) {
+      @if (message.showErrorOnChange) {
         <p class="input-error">{{ message.text }}</p>
-      </ng-container>
-      <ng-template #errorAfterTouched>
-        <ng-container *ngIf="showError">
+      } @else {
+        @if (showError) {
           <p class="input-error">{{ message.text }}</p>
-        </ng-container>
-      </ng-template>
-    </ng-container>
-  </ng-container>
+        }
+      }
+    }
+  }
 </ng-template>

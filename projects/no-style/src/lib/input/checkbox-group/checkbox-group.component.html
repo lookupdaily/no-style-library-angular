@@ -1,16 +1,17 @@
 <form [formGroup]="form">
-  <div
-    formArrayName="checkboxes"
-    *ngFor="let control of formArray.controls; index as i"
-  >
-    <input
-      type="checkbox"
-      [formControlName]="i"
-      [attr.id]="id + '-' + i"
-      [name]="name"
-    />
-    <label class="nsinput-option-label" [for]="id + '-' + i">{{
-      options[i].label
-    }}</label>
-  </div>
+  @for (control of formArray.controls; track control; let i = $index) {
+    <div
+      formArrayName="checkboxes"
+      >
+      <input
+        type="checkbox"
+        [formControlName]="i"
+        [attr.id]="id + '-' + i"
+        [name]="name"
+        />
+      <label class="nsinput-option-label" [for]="id + '-' + i">{{
+        options[i].label
+      }}</label>
+    </div>
+  }
 </form>
