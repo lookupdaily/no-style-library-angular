@@ -119,7 +119,7 @@
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/no-styles/tsconfig.lib.prod.json"
+              "tsConfig": "./projects/no-styles/tsconfig.lib.prod.json"
             },
             "development": {
               "tsConfig": "projects/no-styles/tsconfig.lib.json"
@@ -168,6 +168,5 @@
         }
       }
     }
-  },
-  "defaultProject": "no-styles-angular"
+  }
 }
