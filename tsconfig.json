@@ -19,7 +19,8 @@
       "no-styles": [
         "dist/no-styles/no-styles",
         "dist/no-styles"
-      ]
+      ],
+      "types": ["@testing-library/jest-dom"],
     },
     "declaration": false,
     "downlevelIteration": true,
@@ -31,7 +32,8 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "esModuleInterop": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -39,5 +41,8 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "strictOutputEventTypes": true,
-  }
+  },
+  "include": [
+    "./src/**/**.*",
+  ],
 }

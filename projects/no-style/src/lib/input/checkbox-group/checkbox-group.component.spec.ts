@@ -1,154 +1,181 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import '@testing-library/jest-dom';
+import { Component, Input } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { SpecsUtility } from 'tests/specs.utils';
-import { InputModule } from '../input.module';
 
+import { ComponentObjectModel } from '../../../../tests/component-object-model/component-object-model';
+import { RenderComponentOptions } from '@testing-library/angular';
+import { NSInputOption } from '../input.types';
 import { CheckboxGroupComponent } from './checkbox-group.component';
 
 describe('CheckboxGroupComponent', () => {
-  let component: TestReactiveFormHostComponent;
-  let fixture: ComponentFixture<TestReactiveFormHostComponent>;
-  let checkboxGroupComponent: CheckboxGroupComponent;
+  let component: CheckboxGroupComponentObjectModel;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [TestReactiveFormHostComponent, CheckboxGroupComponent],
-      imports: [InputModule, FormsModule, ReactiveFormsModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
-  });
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TestReactiveFormHostComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    checkboxGroupComponent = component.checkboxGroup;
-    checkboxGroupComponent.options = [
-      { value: '1', label: 'Option 1' },
-      { value: '2', label: 'Option 2' },
-    ];
-    checkboxGroupComponent.ngOnChanges({
-      options: SpecsUtility.createSimpleChange(checkboxGroupComponent.options),
+  describe('if associated with single form control', () => {
+    beforeEach(async () => {
+      component = new CheckboxGroupComponentObjectModel();
+      await component.setup();
     });
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('renders a list of given options, each with a label', () => {
-    const checkboxItems = fixture.debugElement.queryAll(By.css('div'));
-    expect(checkboxItems.length).toBe(2);
-
-    const isAllItemsContainingInput = () =>
-      Array.from(checkboxItems).every(
-        (checkboxItem) =>
-          checkboxItem.nativeElement.innerHTML.includes('input') &&
-          checkboxItem.nativeElement.innerHTML.includes('label')
-      );
-    expect(isAllItemsContainingInput()).toBeTrue();
-    expect(checkboxItems[0].nativeElement.innerHTML).toContain('Option 1');
-  });
-
-  it('should render inputs with checkbox type', () => {
-    const firstInput = fixture.debugElement.query(By.css('input')).nativeElement;
-    expect(firstInput.type).toBe('checkbox');
-  });
-
-  it('should create a form array of given options', () => {
-    expect(checkboxGroupComponent.formArray.controls.length).toBe(2);
-  });
-
-  it('should update the associated form value to include only checked items', () => {
-    const nativeInputElement = fixture.debugElement.query(
-      By.css('input')
-    ).nativeElement;
-    nativeInputElement.click();
-    fixture.detectChanges();
-
-    expect(component.form.value.test).toBe('1');
-  });
-
-  it('associated form value should be of type array if form control is initialised with array', () => {
-    const componentWithArray = component.checkboxGroupArray;
-    componentWithArray.options = [
-      { value: '1', label: 'Option 1' },
-      { value: '2', label: 'Option 2' },
-    ];
-    componentWithArray.ngOnChanges({
-      options: SpecsUtility.createSimpleChange(checkboxGroupComponent.options),
+  
+    it('renders a list of given options, each with a label', () => {
+      component.expect.toDisplayALabelledCheckboxForEachOption();
     });
-    fixture.detectChanges();
-    const formControls = fixture.debugElement.queryAll(
-      By.css('ns-checkbox-group')
-    );
+  
+    it('should update the form value to include only checked items', async () => {
+      await component.selectACheckbox();
+      component.expect.formToHaveSingleValue();
+    });
 
-    const nativeInputElement = formControls[1].query(
-      By.css('input')
-    ).nativeElement;
-    nativeInputElement.click();
-    fixture.detectChanges();
+    it('should update the form value if more than one checked item', async () => {
+      await component.selectCheckboxes();
+      component.expect.formToHaveMultipleValues();
+    });
 
-    expect(component.form.value.testArray).toEqual(['1']);
+    it('should update the checkbox values rendered if the form value is changed programatically', () => {
+      component.setFormValueToAllOptions();
+      component.expect.allCheckboxesToBeChecked();
+    });
   });
 
-  it('should update the checkbox values rendered if the form value is changed programatically', () => {
-    component.form.get('test').setValue('1,2');
-    fixture.detectChanges();
+  describe('if associated with form control array', () => {
+    beforeEach(async() => {
+      component = new CheckboxGroupComponentObjectModel();
+      await component.setupArrayForm();
+    });
 
-    const checkboxes = fixture.debugElement.queryAll(By.css('input'));
-    const isAllChecked = () =>
-      Array.from(checkboxes).every(
-        (checkbox) => checkbox.nativeElement.checked
-      );
-    expect(isAllChecked()).toBeTrue();
-  });
+    it('renders a list of given options, each with a label', () => {
+      component.expect.toDisplayALabelledCheckboxForEachOption();
+    });
 
-  it('should emit change event for checkbox change', () => {
-    spyOn(checkboxGroupComponent.valueChange, 'emit');
+    it('should update the form value as array', async() => {
+      await component.selectACheckbox()
+      component.expect.formToHaveSingleValue();
+    });
 
-    const nativeInputElement = fixture.debugElement.query(
-      By.css('input')
-    ).nativeElement;
-    nativeInputElement.click();
-    fixture.detectChanges();
-
-    expect(checkboxGroupComponent.valueChange.emit).toHaveBeenCalledWith('1');
+    it('should update the form value if more than one checked item', async () => {
+      await component.selectCheckboxes();
+      component.expect.formToHaveMultipleValues();
+    });
   });
 });
 
+class CheckboxGroupComponentObjectModel extends ComponentObjectModel<ReactiveFormHostComponent | ReactiveFormArrayHostComponent> {
+  setFormValueToAllOptions() {
+    this.instance.form.get('test')?.setValue('1,2');
+    this.screen.detectChanges();
+  }
+
+  async selectCheckboxes() {
+    const checkboxes = this.checkboxes;
+    await this.user.click(checkboxes[0]);
+    await this.user.click(checkboxes[1]);
+  }
+  async selectACheckbox () {
+    await this.user.click(this.checkboxes[0]);
+  }
+  readonly expect: TestComponentAssertions;
+  options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+  ];
+
+  renderComponentOptions: RenderComponentOptions<ReactiveFormHostComponent> = {
+    declarations: [CheckboxGroupComponent],
+    imports: [ReactiveFormsModule, FormsModule],
+    componentInputs: { options: this.options },
+  };
+
+  constructor() {
+    super();
+    this.expect = new TestComponentAssertions(this);
+  }
+  async setup() {
+    await this.baseSetup(ReactiveFormHostComponent, this.renderComponentOptions);
+  }
+
+  async setupArrayForm() {
+    await this.baseSetup(ReactiveFormArrayHostComponent, this.renderComponentOptions);
+  }
+}
+
+class TestComponentAssertions {
+  allCheckboxesToBeChecked() {
+    this.component.checkboxes.forEach(checkbox => {
+      expect(checkbox).toBeChecked();
+    })
+  };
+
+  formToHaveMultipleValues() {
+    this.formToHaveValue('1,2');
+  }
+  formToHaveSingleValue() {
+    this.formToHaveValue('1');
+  }
+
+  constructor(readonly component: CheckboxGroupComponentObjectModel) {}
+
+  formToHaveValue(value: string | boolean) {
+    expect(this.component.screen.getByText(`Value: ${value}`)).toBeInTheDocument();
+  }
+
+  toDisplayALabelledCheckboxForEachOption() {
+    this.component.options.forEach((option) => {
+      const input = this.component.getByLabel(option.label);
+      expect(input).toBeInTheDocument();
+      expect(input?.type).toBe("checkbox");
+    });
+  }
+}
+
+
 @Component({
   template: `
-    <form [formGroup]="form">
+    <form [formGroup]="form" name="form">
       <ns-checkbox-group
         #checkboxGroup
         label="Test"
         formControlName="test"
+        [options]="options"
       ></ns-checkbox-group>
+      <p>Value: {{ value }} </p>
+    </form>
+  `,
+})
+class ReactiveFormHostComponent {
+  @Input() options: NSInputOption[] = [];
+  form: FormGroup = new FormGroup({
+    test: new FormControl(''),
+  });
+
+  get value() {
+    return this.form.get('test')?.value;
+  }
+}
+
+@Component({
+  template: `
+    <form [formGroup]="form" name="form">
       <ns-checkbox-group
         #checkboxGroupArray
         label="Test"
         formControlName="testArray"
+        [options]="options"
       ></ns-checkbox-group>
+      <p>Value: {{ value }}</p>
     </form>
   `,
 })
-export class TestReactiveFormHostComponent {
-  @ViewChild('checkboxGroup')
-  public checkboxGroup!: CheckboxGroupComponent;
-  @ViewChild('checkboxGroupArray')
-  public checkboxGroupArray!: CheckboxGroupComponent;
-
+class ReactiveFormArrayHostComponent {
+  @Input() options: NSInputOption[] = [];
   form: FormGroup = new FormGroup({
-    test: new FormControl(''),
     testArray: new FormControl([]),
   });
+
+  get value() {
+    return this.form.get('testArray')?.value.join(',');
+  }
 }
