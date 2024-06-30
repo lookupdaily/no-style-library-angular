@@ -1,4 +1,4 @@
-# NoStylesAngular
+# No styles angular
 
 A personal playground to explore creating a component library of custom form elements using Angular, with a focus on function over form.
 
