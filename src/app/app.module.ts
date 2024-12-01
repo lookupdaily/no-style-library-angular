@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { NoStyleModule } from 'projects/no-style/src/public-api';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -17,7 +17,9 @@ import { AppComponent } from './app.component';
     ReactiveFormsModule,
     NoStyleModule,
   ],
-  providers: [],
+  providers: [
+    provideClientHydration()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
